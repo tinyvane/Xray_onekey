@@ -6,7 +6,8 @@
 
 > Thanks for non-commercial open source development authorization by JetBrains!
 
-### 由于 xtls 存在被阻断的可能性，建议使用 Nginx 前置版本
+## 由于 Nginx 前置导致的嵌套 tls 可能会出现连接阻断 目前更推荐使用 reality ，建议移步到以下地址
+https://github.com/wulabing/xray_docker
 
 ### Telegram 群组
 * Telegram 交流群：https://t.me/wulabing_v2ray 
