@@ -407,7 +407,7 @@ function ssl_install() {
 
 function acme() {
   # "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-  "$HOME"/.acme.sh/acme.sh --set-default-ca --server https://buypass.com/acme
+  "$HOME"/.acme.sh/acme.sh --set-default-ca --server https://buypass.com/acme --debug
   nginx_conf="/etc/nginx/conf.d/${domain}.conf"
   sed -i "8s/^/#/" "$nginx_conf"
   sed -i "8a\\\troot $website_dir;" "$nginx_conf"
@@ -470,7 +470,7 @@ function ssl_judge_and_install() {
     echo "证书文件已存在"
   elif [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" ]]; then
     echo "证书文件已存在"
-    "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --ecc
+    "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --ecc --debug
     judge "证书启用"
   else
     mkdir /ssl
@@ -813,7 +813,7 @@ menu() {
     restart_all
     ;;
   36)
-    "/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh"
+    "/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh" --debug
     restart_all
     ;;
   37)
