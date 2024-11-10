@@ -407,17 +407,17 @@ function ssl_install() {
 }
 
 function acme() {
-  # "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-  "$HOME"/.acme.sh/acme.sh --set-default-ca --server https://buypass.com/acme --debug
+  "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt --debug 2
+  # "$HOME"/.acme.sh/acme.sh --set-default-ca --server https://buypass.com/acme --debug
   nginx_conf="/etc/nginx/conf.d/${domain}.conf"
   sed -i "8s/^/#/" "$nginx_conf"
   sed -i "8a\\\troot $website_dir;" "$nginx_conf"
   systemctl restart nginx
 
-  if "$HOME"/.acme.sh/acme.sh --issue --insecure -d "${domain}" --webroot "$website_dir" -k ec-256 --force; then
+  if "$HOME"/.acme.sh/acme.sh --issue --insecure -d "${domain}" --webroot "$website_dir" -k ec-256 --force --debug 2; then
     print_ok "SSL 证书生成成功"
     sleep 2
-    if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "systemctl restart xray" --ecc --force; then
+    if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "systemctl restart xray" --ecc --force --debug 2; then
       print_ok "SSL 证书配置成功"
       sleep 2
       if [[ -n $(type -P wgcf) && -n $(type -P wg-quick) ]]; then
@@ -425,10 +425,10 @@ function acme() {
         print_ok "已启动 wgcf-warp"
       fi
     fi
-  elif "$HOME"/.acme.sh/acme.sh --issue --insecure -d "${domain}" --webroot "$website_dir" -k ec-256 --force --listen-v6; then
+  elif "$HOME"/.acme.sh/acme.sh --issue --insecure -d "${domain}" --webroot "$website_dir" -k ec-256 --force --listen-v6 --debug 2; then
     print_ok "SSL 证书生成成功"
     sleep 2
-    if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "systemctl restart xray" --ecc --force; then
+    if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "systemctl restart xray" --ecc --force --debug 2; then
       print_ok "SSL 证书配置成功"
       sleep 2
       if [[ -n $(type -P wgcf) && -n $(type -P wg-quick) ]]; then
@@ -471,7 +471,7 @@ function ssl_judge_and_install() {
     echo "证书文件已存在"
   elif [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" ]]; then
     echo "证书文件已存在"
-    "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --ecc --debug
+    "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --ecc --debug 2
     judge "证书启用"
   else
     mkdir /ssl
