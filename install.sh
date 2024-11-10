@@ -693,6 +693,10 @@ function install_xray_ws() {
   restart_all
   basic_ws_information
 }
+function issue_certificates() {
+  generate_certificate
+  ssl_judge_and_install
+}
 menu() {
   update_sh
   shell_mode_check
@@ -798,7 +802,7 @@ menu() {
     restart_all
     ;;
   37)
-    "/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh"
+    issue_certificates
     restart_all
     ;;
   40)
