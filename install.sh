@@ -28,7 +28,7 @@ ERROR="${Red}[ERROR]${Font}"
 
 # 变量
 shell_version="1.3.11"
-github_branch="main"
+github_branch="refs/heads/main"
 xray_conf_dir="/usr/local/etc/xray"
 website_dir="/www/xray_web/"
 xray_access_log="/var/log/xray/access.log"
