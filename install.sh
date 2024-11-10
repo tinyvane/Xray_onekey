@@ -495,6 +495,16 @@ function generate_certificate() {
   chown nobody.$cert_group $cert_dir/self_signed_key.pem
 }
 
+function generate_certificate2() {
+  signedcert=$(xray tls cert -domain="$local_ipv4" -name="$local_ipv4" -org="$local_ipv4" -expire=87600h)
+  echo $signedcert | jq '.certificate[]' | sed 's/\"//g' | tee $cert_dir/self_signed_cert.pem
+  echo $signedcert | jq '.key[]' | sed 's/\"//g' >$cert_dir/self_signed_key.pem
+  openssl x509 -in $cert_dir/self_signed_cert.pem -noout || (print_error "生成自签名证书失败" && exit 1)
+  print_ok "生成自签名证书成功"
+  chown nobody.$cert_group $cert_dir/self_signed_cert.pem
+  chown nobody.$cert_group $cert_dir/self_signed_key.pem
+}
+
 function configure_web() {
   rm -rf /www/xray_web
   mkdir -p /www/xray_web
@@ -694,7 +704,7 @@ function install_xray_ws() {
   basic_ws_information
 }
 function issue_certificates() {
-  generate_certificate
+  generate_certificate2
   ssl_judge_and_install
 }
 menu() {
