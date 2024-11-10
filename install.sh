@@ -399,7 +399,8 @@ function ssl_install() {
   #  fi
   #  judge "安装 SSL 证书生成脚本依赖"
 
-  curl -L https://get.acme.sh | bash
+  # curl -L https://get.acme.sh | bash
+  wget -O acme.sh https://raw.githubusercontent.com/tinyvane/Xray_onekey/${github_branch}/config/acme.sh
   judge "安装 SSL 证书生成脚本"
 }
 
