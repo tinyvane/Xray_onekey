@@ -2,9 +2,9 @@
 
 #====================================================
 #	System Request:Debian 9+/Ubuntu 18.04+/Centos 7+
-#	Author:	wulabing
+#	Author:	tinyvane
 #	Dscription: Xray onekey Management
-#	email: admin@wulabing.com
+#	email: admin@tinyvane.com
 #====================================================
 
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -86,13 +86,13 @@ function system_check() {
     print_ok "当前系统为 Centos ${VERSION_ID} ${VERSION}"
     INS="yum install -y"
     ${INS} wget
-    wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/wulabing/Xray_onekey/${github_branch}/basic/nginx.repo
+    wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/tinyvane/Xray_onekey/${github_branch}/basic/nginx.repo
 
 
   elif [[ "${ID}" == "ol" ]]; then
     print_ok "当前系统为 Oracle Linux ${VERSION_ID} ${VERSION}"
     INS="yum install -y"
-    wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/wulabing/Xray_onekey/${github_branch}/basic/nginx.repo
+    wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/tinyvane/Xray_onekey/${github_branch}/basic/nginx.repo
   elif [[ "${ID}" == "debian" && ${VERSION_ID} -ge 9 ]]; then
     print_ok "当前系统为 Debian ${VERSION_ID} ${VERSION}"
     INS="apt install -y"
@@ -209,7 +209,7 @@ function dependency_install() {
   ${INS} jq
 
   if ! command -v jq; then
-    wget -P /usr/bin https://raw.githubusercontent.com/wulabing/Xray_onekey/${github_branch}/binary/jq && chmod +x /usr/bin/jq
+    wget -P /usr/bin https://raw.githubusercontent.com/tinyvane/Xray_onekey/${github_branch}/binary/jq && chmod +x /usr/bin/jq
     judge "安装 jq"
   fi
 
@@ -232,7 +232,7 @@ function basic_optimization() {
 }
 
 function domain_check() {
-  read -rp "请输入你的域名信息(eg: www.wulabing.com):" domain
+  read -rp "请输入你的域名信息(eg: www.tinyvane.com):" domain
   domain_ip=$(curl -sm8 ipget.net/?ip="${domain}")
   print_ok "正在获取 IP 地址信息，请耐心等待"
   wgcfv4_status=$(curl -s4m8 https://www.cloudflare.com/cdn-cgi/trace -k | grep warp | cut -d= -f2)
@@ -290,13 +290,13 @@ function port_exist_check() {
   fi
 }
 function update_sh() {
-  ol_version=$(curl -L -s https://raw.githubusercontent.com/wulabing/Xray_onekey/${github_branch}/install.sh | grep "shell_version=" | head -1 | awk -F '=|"' '{print $3}')
+  ol_version=$(curl -L -s https://raw.githubusercontent.com/tinyvane/Xray_onekey/${github_branch}/install.sh | grep "shell_version=" | head -1 | awk -F '=|"' '{print $3}')
   if [[ "$shell_version" != "$(echo -e "$shell_version\n$ol_version" | sort -rV | head -1)" ]]; then
     print_ok "存在新版本，是否更新 [Y/N]?"
     read -r update_confirm
     case $update_confirm in
     [yY][eE][sS] | [yY])
-      wget -N --no-check-certificate https://raw.githubusercontent.com/wulabing/Xray_onekey/${github_branch}/install.sh
+      wget -N --no-check-certificate https://raw.githubusercontent.com/tinyvane/Xray_onekey/${github_branch}/install.sh
       print_ok "更新完成"
       print_ok "您可以通过 bash $0 执行本程序"
       exit 0
@@ -344,7 +344,7 @@ function modify_ws() {
 
 function configure_nginx() {
   nginx_conf="/etc/nginx/conf.d/${domain}.conf"
-  cd /etc/nginx/conf.d/ && rm -f ${domain}.conf && wget -O ${domain}.conf https://raw.githubusercontent.com/wulabing/Xray_onekey/${github_branch}/config/web.conf
+  cd /etc/nginx/conf.d/ && rm -f ${domain}.conf && wget -O ${domain}.conf https://raw.githubusercontent.com/tinyvane/Xray_onekey/${github_branch}/config/web.conf
   sed -i "s/xxx/${domain}/g" ${nginx_conf}
   judge "Nginx 配置 修改"
   
@@ -366,13 +366,13 @@ function modify_port() {
 }
 
 function configure_xray() {
-  cd /usr/local/etc/xray && rm -f config.json && wget -O config.json https://raw.githubusercontent.com/wulabing/Xray_onekey/${github_branch}/config/xray_xtls-rprx-vision.json
+  cd /usr/local/etc/xray && rm -f config.json && wget -O config.json https://raw.githubusercontent.com/tinyvane/Xray_onekey/${github_branch}/config/xray_xtls-rprx-vision.json
   modify_UUID
   modify_port
 }
 
 function configure_xray_ws() {
-  cd /usr/local/etc/xray && rm -f config.json && wget -O config.json https://raw.githubusercontent.com/wulabing/Xray_onekey/${github_branch}/config/xray_tls_ws_mix-rprx-vision.json
+  cd /usr/local/etc/xray && rm -f config.json && wget -O config.json https://raw.githubusercontent.com/tinyvane/Xray_onekey/${github_branch}/config/xray_tls_ws_mix-rprx-vision.json
   modify_UUID
   modify_UUID_ws
   modify_port
@@ -502,7 +502,7 @@ function configure_web() {
   read -r webpage
   case $webpage in
   [yY][eE][sS] | [yY])
-    wget -O web.tar.gz https://raw.githubusercontent.com/wulabing/Xray_onekey/main/basic/web.tar.gz
+    wget -O web.tar.gz https://raw.githubusercontent.com/tinyvane/Xray_onekey/main/basic/web.tar.gz
     tar xzf web.tar.gz -C /www/xray_web
     judge "站点伪装"
     rm -f web.tar.gz
@@ -554,16 +554,16 @@ function vless_xtls-rprx-vision_link() {
   DOMAIN=$(cat ${domain_tmp_dir}/domain)
 
   print_ok "URL 链接 (VLESS + TCP + TLS)"
-  print_ok "vless://$UUID@$DOMAIN:$PORT?security=tls&flow=$FLOW#TLS_wulabing-$DOMAIN"
+  print_ok "vless://$UUID@$DOMAIN:$PORT?security=tls&flow=$FLOW#TLS_tinyvane-$DOMAIN"
 
   print_ok "URL 链接 (VLESS + TCP + XTLS)"
-  print_ok "vless://$UUID@$DOMAIN:$PORT?security=xtls&flow=$FLOW#XTLS_wulabing-$DOMAIN"
+  print_ok "vless://$UUID@$DOMAIN:$PORT?security=xtls&flow=$FLOW#XTLS_tinyvane-$DOMAIN"
   print_ok "-------------------------------------------------"
   print_ok "URL 二维码 (VLESS + TCP + TLS) （请在浏览器中访问）"
-  print_ok "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://$UUID@$DOMAIN:$PORT?security=tls%26flow=$FLOW%23TLS_wulabing-$DOMAIN"
+  print_ok "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://$UUID@$DOMAIN:$PORT?security=tls%26flow=$FLOW%23TLS_tinyvane-$DOMAIN"
 
   print_ok "URL 二维码 (VLESS + TCP + XTLS) （请在浏览器中访问）"
-  print_ok "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://$UUID@$DOMAIN:$PORT?security=xtls%26flow=$FLOW%23XTLS_wulabing-$DOMAIN"
+  print_ok "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://$UUID@$DOMAIN:$PORT?security=xtls%26flow=$FLOW%23XTLS_tinyvane-$DOMAIN"
 }
 
 function vless_xtls-rprx-vision_information() {
@@ -610,22 +610,22 @@ function ws_link() {
   DOMAIN=$(cat ${domain_tmp_dir}/domain)
 
   print_ok "URL 链接 (VLESS + TCP + TLS)"
-  print_ok "vless://$UUID@$DOMAIN:$PORT?security=tls#TLS_wulabing-$DOMAIN"
+  print_ok "vless://$UUID@$DOMAIN:$PORT?security=tls#TLS_tinyvane-$DOMAIN"
 
   print_ok "URL 链接 (VLESS + TCP + XTLS)"
-  print_ok "vless://$UUID@$DOMAIN:$PORT?security=xtls&flow=$FLOW#XTLS_wulabing-$DOMAIN"
+  print_ok "vless://$UUID@$DOMAIN:$PORT?security=xtls&flow=$FLOW#XTLS_tinyvane-$DOMAIN"
 
   print_ok "URL 链接 (VLESS + WebSocket + TLS)"
-  print_ok "vless://$UUID@$DOMAIN:$PORT?type=ws&security=tls&path=%2f${WS_PATH_WITHOUT_SLASH}%2f#WS_TLS_wulabing-$DOMAIN"
+  print_ok "vless://$UUID@$DOMAIN:$PORT?type=ws&security=tls&path=%2f${WS_PATH_WITHOUT_SLASH}%2f#WS_TLS_tinyvane-$DOMAIN"
   print_ok "-------------------------------------------------"
   print_ok "URL 二维码 (VLESS + TCP + TLS) （请在浏览器中访问）"
-  print_ok "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://$UUID@$DOMAIN:$PORT?security=tls%23TLS_wulabing-$DOMAIN"
+  print_ok "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://$UUID@$DOMAIN:$PORT?security=tls%23TLS_tinyvane-$DOMAIN"
 
   print_ok "URL 二维码 (VLESS + TCP + XTLS) （请在浏览器中访问）"
-  print_ok "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://$UUID@$DOMAIN:$PORT?security=xtls%26flow=$FLOW%23XTLS_wulabing-$DOMAIN"
+  print_ok "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://$UUID@$DOMAIN:$PORT?security=xtls%26flow=$FLOW%23XTLS_tinyvane-$DOMAIN"
 
   print_ok "URL 二维码 (VLESS + WebSocket + TLS) （请在浏览器中访问）"
-  print_ok "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://$UUID@$DOMAIN:$PORT?type=ws%26security=tls%26path=%2f${WS_PATH_WITHOUT_SLASH}%2f%23WS_TLS_wulabing-$DOMAIN"
+  print_ok "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://$UUID@$DOMAIN:$PORT?type=ws%26security=tls%26path=%2f${WS_PATH_WITHOUT_SLASH}%2f%23WS_TLS_tinyvane-$DOMAIN"
 }
 
 function basic_information() {
@@ -656,7 +656,7 @@ function bbr_boost_sh() {
 }
 
 function mtproxy_sh() {
-  wget -N --no-check-certificate "https://github.com/wulabing/mtp/raw/master/mtproxy.sh" && chmod +x mtproxy.sh && bash mtproxy.sh
+  wget -N --no-check-certificate "https://github.com/tinyvane/mtp/raw/master/mtproxy.sh" && chmod +x mtproxy.sh && bash mtproxy.sh
 }
 
 function install_xray() {
@@ -697,8 +697,8 @@ menu() {
   update_sh
   shell_mode_check
   echo -e "\t Xray 安装管理脚本 ${Red}[${shell_version}]${Font}"
-  echo -e "\t---authored by wulabing---"
-  echo -e "\thttps://github.com/wulabing\n"
+  echo -e "\t---authored by tinyvane---"
+  echo -e "\thttps://github.com/tinyvane\n"
 
   echo -e "当前已安装版本：${shell_mode}"
   echo -e "—————————————— 安装向导 ——————————————"""
@@ -749,7 +749,7 @@ menu() {
     ;;
   14)
     if [[ ${shell_mode} == "ws" ]]; then
-      read -rp "请输入路径(示例：/wulabing/ 要求两侧都包含 /):" WS_PATH
+      read -rp "请输入路径(示例：/tinyvane/ 要求两侧都包含 /):" WS_PATH
       modify_fallback_ws
       modify_ws
       restart_all
