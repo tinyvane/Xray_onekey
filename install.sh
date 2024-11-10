@@ -481,7 +481,7 @@ function ssl_judge_and_install() {
   fi
 
   # Xray 默认以 nobody 用户运行，证书权限适配
-  chown -R nobody.$cert_group /ssl/*
+  chown -R nobody:$cert_group /ssl/*
 }
 
 function generate_certificate() {
@@ -494,8 +494,8 @@ function generate_certificate() {
   echo $signedcert | jq '.key[]' | sed 's/\"//g' >$cert_dir/self_signed_key.pem
   openssl x509 -in $cert_dir/self_signed_cert.pem -noout || (print_error "生成自签名证书失败" && exit 1)
   print_ok "生成自签名证书成功"
-  chown nobody.$cert_group $cert_dir/self_signed_cert.pem
-  chown nobody.$cert_group $cert_dir/self_signed_key.pem
+  chown nobody:$cert_group $cert_dir/self_signed_cert.pem
+  chown nobody:$cert_group $cert_dir/self_signed_key.pem
 }
 
 function generate_certificate2() {
@@ -506,8 +506,8 @@ function generate_certificate2() {
   echo $signedcert | jq '.key[]' | sed 's/\"//g' >$cert_dir/self_signed_key.pem
   openssl x509 -in $cert_dir/self_signed_cert.pem -noout || (print_error "生成自签名证书失败" && exit 1)
   print_ok "生成自签名证书成功"
-  chown nobody.$cert_group $cert_dir/self_signed_cert.pem
-  chown nobody.$cert_group $cert_dir/self_signed_key.pem
+  chown nobody:$cert_group $cert_dir/self_signed_cert.pem
+  chown nobody:$cert_group $cert_dir/self_signed_key.pem
 }
 
 function configure_web() {
