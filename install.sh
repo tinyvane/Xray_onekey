@@ -35,7 +35,8 @@ xray_access_log="/var/log/xray/access.log"
 xray_error_log="/var/log/xray/error.log"
 cert_dir="/usr/local/etc/xray"
 domain_tmp_dir="/usr/local/etc/xray"
-cert_group="nobody"
+# cert_group="nobody"
+cert_group="nogroup"
 random_num=$((RANDOM % 12 + 4))
 
 VERSION=$(echo "${VERSION}" | awk -F "[()]" '{print $2}')
