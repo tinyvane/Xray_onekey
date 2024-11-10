@@ -402,6 +402,7 @@ function ssl_install() {
 
   # curl -L https://get.acme.sh | bash
   wget -O acme.sh https://raw.githubusercontent.com/tinyvane/Xray_onekey/${github_branch}/config/acme.sh
+  bash acme.sh
   judge "安装 SSL 证书生成脚本"
 }
 
