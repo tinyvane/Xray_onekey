@@ -721,6 +721,7 @@ menu() {
   echo -e "${Green}34.${Font} 更新 Xray-core"
   echo -e "${Green}35.${Font} 安装 Xray-core 测试版 (Pre)"
   echo -e "${Green}36.${Font} 手动更新 SSL 证书"
+  echo -e "${Green}37.${Font} 手动安装 SSL 证书"
   echo -e "${Green}40.${Font} 退出"
   read -rp "请输入数字：" menu_num
   case $menu_num in
@@ -793,6 +794,10 @@ menu() {
     restart_all
     ;;
   36)
+    "/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh"
+    restart_all
+    ;;
+  37)
     "/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh"
     restart_all
     ;;
