@@ -407,8 +407,9 @@ function ssl_install() {
 function acme() {
   # "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt
   "$HOME"/.acme.sh/acme.sh --set-default-ca --server https://buypass.com/acme
-  sed -i "6s/^/#/" "$nginx_conf"
-  sed -i "6a\\\troot $website_dir;" "$nginx_conf"
+  nginx_conf="/etc/nginx/conf.d/${domain}.conf"
+  sed -i "8s/^/#/" "$nginx_conf"
+  sed -i "8a\\\troot $website_dir;" "$nginx_conf"
   systemctl restart nginx
 
   if "$HOME"/.acme.sh/acme.sh --issue --insecure -d "${domain}" --webroot "$website_dir" -k ec-256 --force; then
@@ -443,8 +444,8 @@ function acme() {
     exit 1
   fi
 
-  sed -i "7d" "$nginx_conf"
-  sed -i "6s/#//" "$nginx_conf"
+  sed -i "9d" "$nginx_conf"
+  sed -i "8s/#//" "$nginx_conf"
 }
 
 function ssl_judge_and_install() {
