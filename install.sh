@@ -407,9 +407,9 @@ function ssl_install() {
 }
 
 function acme() {
-  # "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt --debug 2
+  "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt --debug 2
   # "$HOME"/.acme.sh/acme.sh --set-default-ca --server https://buypass.com/acme --debug
-  "$HOME"/.acme.sh/acme.sh --set-default-ca --server https://acme.zerossl.com/v2/DV90 --debug 2
+  # "$HOME"/.acme.sh/acme.sh --set-default-ca --server https://acme.zerossl.com/v2/DV90 --debug 2
   nginx_conf="/etc/nginx/conf.d/${domain}.conf"
   sed -i "8s/^/#/" "$nginx_conf"
   sed -i "8a\\\troot $website_dir;" "$nginx_conf"
